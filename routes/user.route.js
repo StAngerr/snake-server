@@ -1,16 +1,17 @@
 const auth = require("../middleware/auth");
-const User = require('mongoose');
 const express = require("express");
+const bcrypt = require("bcrypt");
+const { User, validateUser} = require('../models/user.model');
 const router = express.Router();
+
 
 router.get("/current", auth, async (req, res) => {
     const user = await User.findById(req.user._id).select("-password");
-    res.send(user);
+    res.send(userDto(user));
 });
 
-
 router.post("/", async (req, res) => {
-    const { error } = validate(req.body);
+    const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     let user = await User.findOne({ email: req.body.email });
@@ -25,11 +26,7 @@ router.post("/", async (req, res) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.header("x-auth-token", token).send({
-        _id: user._id,
-        name: user.name,
-        email: user.email
-    });
+    res.header("authorization", token).send(userDto(user));
 });
 
 module.exports = router;

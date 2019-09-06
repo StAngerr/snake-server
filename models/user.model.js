@@ -31,14 +31,19 @@ UserSchema.methods.generateAuthToken = function() {
     return token;
 }
 
-function validateUser(user) {
-    const schema = {
+const validateUser = (user) => {
+    return Joi.validate(user, {
         name: Joi.string().min(3).max(50).required(),
         email: Joi.string().min(5).max(255).required().email(),
         password: Joi.string().min(3).max(255).required()
-    };
+    });
+};
 
-    return Joi.validate(user, schema);
+const validateUserCredentials = (loginData) => {
+    return Joi.validate(loginData, {
+        email: Joi.string().min(5).max(255).required().email(),
+        password: Joi.string().min(3).max(255).required()
+    });
 }
 
 const User = mongoose.model('User', UserSchema);
@@ -46,4 +51,5 @@ const User = mongoose.model('User', UserSchema);
 exports.User = User;
 
 exports.validateUser = validateUser;
+exports.validateUserCredentials = validateUserCredentials;
 

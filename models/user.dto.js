@@ -1,4 +1,7 @@
 exports.userDto = (user) => ({
   email: user.email,
-  username: user.name,
+  name: user.name,
+  phone: user.phone,
+  address: user.address,
+  password: user.password
 });

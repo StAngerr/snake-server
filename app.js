@@ -4,6 +4,7 @@ const usersRoute = require('./routes/user.route');
 const authRoute = require('./routes/auth.route');
 const express = require('express');
 const app = express();
+const corsHeaders = require('./middleware/cors');
 
 if (!config.get('privateKey')) {
   console.error('FATAL ERROR: myprivatekey is not defined.');
@@ -16,6 +17,8 @@ mongoose
     .catch((err) => console.error('Could not connect to MongoDB...'));
 
 app.use(express.json());
+
+app.use(corsHeaders);
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', usersRoute);

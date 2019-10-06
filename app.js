@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const usersRoute = require('./routes/user.route');
 const authRoute = require('./routes/auth.route');
 const express = require('express');
+const auth = require('./middleware/auth');
 const app = express();
 const corsHeaders = require('./middleware/cors');
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use(corsHeaders);
 
 app.use('/api/auth', authRoute);
-app.use('/api/users', usersRoute);
+app.use('/api/users', auth, usersRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

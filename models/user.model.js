@@ -46,6 +46,7 @@ UserSchema.methods.generateAuthToken = function() {
 
 const validateUser = (user) => {
   return Joi.validate(user, {
+    id: Joi.string(),
     name: Joi.string().min(nameMin).max(nameMax).required(),
     address: Joi.string().min(addressMin).max(addressMax),
     phone: Joi.string().min(phoneMin).max(phoneMax),

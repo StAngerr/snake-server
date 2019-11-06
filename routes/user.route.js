@@ -1,7 +1,9 @@
 const express = require('express');
-const { User } = require('../models/user.model');
+const { User, validateCreatedUser } = require('../models/user.model');
 const router = express.Router();
-const { userDto } = require('../models/user.dto');
+const { userDto, createUserDto } = require('../models/user.dto');
+const generator = require('generate-password');
+const bcrypt = require('bcrypt');
 
 router.get('/', (req, res) => {
     User.find({}, (err, users) => {
@@ -37,6 +39,33 @@ router.put('/:id', (req, res) => {
         }
         res.send(user);
     })
+});
+
+router.post('/', async (req, res) => {
+    const {error} = validateCreatedUser(createUserDto(req.body));
+    if (error) return res.status(400).send(error.details[0].message);
+
+    let user = await User.findOne({email: req.body.email});
+    if (user) return res.status(400).send('User already exist.');
+    const password = generator.generate({
+        length: 5,
+        numbers: true
+    });
+    user = new User({
+        name: req.body.name,
+        password,
+        email: req.body.email,
+        address: req.body.address,
+        phone: req.body.phone
+    });
+    // user.password = await bcrypt.hash(user.password, 10);
+    try {
+        await user.save();
+
+    } catch (e) {
+        debugger
+    }
+    res.send(userDto(user));
 });
 
 

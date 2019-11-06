@@ -55,6 +55,15 @@ const validateUser = (user) => {
   });
 };
 
+const validateCreatedUser = (user) => {
+  return Joi.validate(user, {
+    name: Joi.string().min(nameMin).max(nameMax).required(),
+    address: Joi.string().min(addressMin).max(addressMax),
+    phone: Joi.string().min(phoneMin).max(phoneMax),
+    email: Joi.string().min(emailMin).max(emailMax).required().email(),
+  });
+};
+
 const validateUserCredentials = (loginData) => {
   return Joi.validate(loginData, {
     email: Joi.string().min(emailMin).max(emailMax).required().email(),
@@ -75,6 +84,7 @@ const User = mongoose.model('User', UserSchema);
 exports.User = User;
 
 exports.validateUser = validateUser;
+exports.validateCreatedUser = validateCreatedUser;
 exports.validateUserCredentials = validateUserCredentials;
 exports.validateConfirmPassword = validateConfirmPassword;
 

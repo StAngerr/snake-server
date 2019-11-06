@@ -6,3 +6,11 @@ exports.userDto = (user) => ({
   address: user.address,
   password: user.password
 });
+
+
+exports.createUserDto = (user) => ({
+  email: user.email,
+  name: user.name,
+  phone: user.phone,
+  address: user.address,
+});
